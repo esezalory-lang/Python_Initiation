@@ -2,7 +2,7 @@
 
 def input_temperature(temp_str: str) -> int:
     temp = int(temp_str)
-    
+
     if temp >= 0 and temp <= 40:
         print(f"Temperature is now {int(temp_str)}°C\n")
     elif temp > 40:
