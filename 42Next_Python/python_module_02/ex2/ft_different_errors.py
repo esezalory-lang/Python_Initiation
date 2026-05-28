@@ -3,16 +3,15 @@
 def garden_operations(operation_number: int = 0) -> None:
 
     if operation_number == 0:
-        return int("abc")
+        int("abc")
     elif operation_number == 1:
-        return 1 / 0
+        1 / 0
     elif operation_number == 2:
-        return open("test.txt", "r")
+        open("test.txt", "r")
     elif operation_number == 3:
-        return 0 + "abc"
+        0 + "abc"
     else:
         print("Operation completed successfully")
-        return
 
 
 def test_error_types() -> None:

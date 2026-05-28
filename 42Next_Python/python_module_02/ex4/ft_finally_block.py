@@ -24,29 +24,26 @@ def water_plant(plant_name: str) -> None:
 
 
 def test_watering_system(test_status: bool) -> None:
-    valid_tests = ["Tomato", "Lettuce", "Carrots"]
-    invalid_tests = ["Tomato", "lettuce"]
-
-    if test_status is True:
-        try:
-            print("Testing valid plants...")
-            print("Opening watering system")
-            for plant in valid_tests:
+    statuses = {
+        True: ["Tomato", "Lettuce", "Carrots"],
+        False: ["Tomato", "lettuce"]
+    }
+    try:
+        for system_status, plant_names in statuses.items():
+            for plant in plant_names:
+                if system_status is True and plant == "Tomato":
+                    print("Testing valid plants...")
+                    print("Opening watering system")
+                elif system_status is False and plant == "Tomato":
+                    print("Testing invalid plants...")
+                    print("Opening watering system")
                 water_plant(plant)
-        except PlantError as p:
-            print(f"Caught {PlantError.__name__}: {p}")
-        finally:
-            print("Closing watering system\n")
-    else:
-        try:
-            print("Testing invalid plants...")
-            print("Opening watering system")
-            for plant in invalid_tests:
-                water_plant(plant)
-        except PlantError as p:
-            print(f"Caught {PlantError.__name__}: {p}")
-        finally:
-            print("Closing watering system\n")
+            print()
+    except PlantError as p:
+        print(f"Caught {PlantError.__name__}: {p}")
+        return
+    finally:
+        print("Closing watering system\n")
 
 
 if __name__ == "__main__":

@@ -44,7 +44,7 @@ def test_pnw_errors(garden_status: bool, water_status: str) -> None:
             print(f"Caught {GardenError.__name__}: {p}")
 
 
-def print_message(msg_idx: int):
+def print_message(msg_idx: int) -> None:
     if msg_idx > 2:
         return
     error_messages = [

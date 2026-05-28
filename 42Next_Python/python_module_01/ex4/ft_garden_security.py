@@ -41,7 +41,7 @@ if __name__ == "__main__":
     rose.set_age(30)
     print(f"Height updated: {height}cm")
     print(f"Age updated: {age} days\n")
-    rose.set_height(-25)
+    rose.set_height("-25")
     rose.set_age(-30)
     print()
     height = rose.get_height()
