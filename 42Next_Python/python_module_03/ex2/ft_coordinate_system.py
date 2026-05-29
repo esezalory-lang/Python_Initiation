@@ -3,8 +3,8 @@
 import math
 
 
-def distance_to_center(set_1: tuple[float, float, float] = (0.0, 0.0, 0.0),
-                       set_2: tuple[float, float, float] = (0.0, 0.0, 0.0)
+def distance_to_center(set_1: tuple[float, ...] = (0.0, 0.0, 0.0),
+                       set_2: tuple[float, ...] = (0.0, 0.0, 0.0)
                        ) -> float:
     x = (set_2[0] - set_1[0])**2
     y = (set_2[1] - set_1[1])**2
@@ -13,11 +13,14 @@ def distance_to_center(set_1: tuple[float, float, float] = (0.0, 0.0, 0.0),
     return distance
 
 
-def get_player_pos() -> tuple[float, float, float]:
+def get_player_pos() -> tuple[float, ...]:
     while True:
         print("Enter new coordinates as floats in format 'x,y,z': ", end="")
         inputs = input().split(",")
-        if len(inputs) != 3:
+        n_inputs = 0
+        for i in inputs:
+            n_inputs += 1
+        if n_inputs != 3:
             print("Invalid Syntax")
             continue
         clean_inputs = []
