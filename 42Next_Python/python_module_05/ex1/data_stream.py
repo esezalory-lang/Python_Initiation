@@ -18,9 +18,7 @@ class DataProcessor(ABC):
         pass
 
     def output(self) -> tuple[int, str]:
-        len = 0
-        for i in self.data_storage:
-            len += 1
+        len = len(self.data_storage)
         current_rank = self.rank_tracker - len
         current_value = self.data_storage[0]
         self.data_storage.remove(self.data_storage[0])
@@ -127,6 +125,64 @@ class LogProcessor(DataProcessor):
                     self.rank_tracker += 1
 
 
+class DataStream:
+    def __init__(self: "DataStream"):
+        self.polyphorm: DataProcessor = DataProcessor()
+        self.processors = []
+
+    # register new dataprocessor
+    def register_processor(self, proc: DataProcessor) -> None:
+        self.processors.append(proc)
+
+    def process_stream(self, stream: list[Any]) -> None:
+        for i in stream:
+            if len(self.processors) == 0:
+                raise Exception("No processor found, no data")
+            for processor in self.processors:
+                if not processor.validate(i):
+                    raise Exception("DataStream error -",
+                                    f"Can't process element in stream: {i}")
+                else:
+                    break
+            processor.ingest(i)
+
+    def print_processor_stats(self) -> None:
+        if len(self.processors) == 0:
+            print("No processor found, no data")
+        else:
+            for i in self.processors:
+                
+
+
+
 if __name__ == "__main__":
     print("=== Code Nexus - Data Stream ===\n")
+    print("Initialize Data Stream...")
+    data = ['Hello world', [3.14, -1, 2.71],
+            [
+            {'log_level': 'WARNING', 'log_message':
+             'Telnet access! Use ssh instead'},
+            {'log_level': 'INFO', 'log_message':
+             'User wil is connected'}
+            ],
+            42, ['Hi', 'five']]
     
+    numeric = NumericProcessor()
+    text = TextProcessor()
+    log = LogProcessor()
+    data_stream = DataStream()
+
+    print("== DataStream statistics ==")
+    data_stream.print_processor_stats()
+
+    print("\nRegistering Numeric Processor\n")
+    data_stream.register_processor(numeric)
+    print("Send first batch of data on stream: ['Hello world', [3.14, -1, 2.71],",
+          "[{'log_level': 'WARNING', 'log_message':",
+          " 'Telnet access! Use ssh instead'},", 
+          "{'log_level': 'INFO', 'log_message':",
+          "'User wil is connected'}], 42, ['Hi', 'five']]")
+    try:
+        data_stream.process_stream(data)
+    except Exception as e:
+        print(f"{e}")

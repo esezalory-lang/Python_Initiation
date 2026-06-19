@@ -18,19 +18,14 @@ class DataProcessor(ABC):
         pass
 
     def output(self) -> tuple[int, str]:
-        len = 0
-        for i in self.data_storage:
-            len += 1
-        current_rank = self.rank_tracker - len
+        length = len(self.data_storage)
+        current_rank = self.rank_tracker - length
         current_value = self.data_storage[0]
         self.data_storage.remove(self.data_storage[0])
         return (current_rank, current_value)
 
 
 class NumericProcessor(DataProcessor):
-    def __init__(self: "NumericProcessor") -> None:
-        super().__init__()
-
     def validate(self, data: Any) -> bool:
         data_types = (int, float, list)
         list_types = (int, float)
@@ -40,27 +35,23 @@ class NumericProcessor(DataProcessor):
                 if not all(isinstance(i, list_types) for i in data):
                     return False
             return True
-        else:
-            return False
+        return False
 
     def ingest(self, data: int | float | list[int | float]
                ) -> None:
-        if self.validate(data) is False:
+        if not self.validate(data):
             raise Exception("Improper numeric data")
         else:
             if isinstance(data, list):
                 for i in data:
-                    self.data_storage += str(i)
+                    self.data_storage.append(str(i))
                     self.rank_tracker += 1
             else:
-                self.data_storage += str(data)
+                self.data_storage.append(str(data))
                 self.rank_tracker += 1
 
 
 class TextProcessor(DataProcessor):
-    def __init__(self: "TextProcessor") -> None:
-        super().__init__()
-
     def validate(self, data: Any) -> bool:
         data_types = (str, list)
 
@@ -69,26 +60,22 @@ class TextProcessor(DataProcessor):
                 if not all(isinstance(i, str) for i in data):
                     return False
             return True
-        else:
-            return False
+        return False
 
     def ingest(self, data: str | list[str]) -> None:
-        if self.validate(data) is False:
-            raise Exception("Improper numeric data")
+        if not self.validate(data):
+            raise Exception("Improper text data")
         else:
             if isinstance(data, list):
                 for i in data:
-                    self.data_storage += [str(i)]
+                    self.data_storage.append(str(i))
                     self.rank_tracker += 1
             else:
-                self.data_storage += str(data)
+                self.data_storage.append(str(data))
                 self.rank_tracker += 1
 
 
 class LogProcessor(DataProcessor):
-    def __init__(self: "LogProcessor"):
-        super().__init__()
-
     def validate(self, data: Any) -> bool:
         data_types = (dict, list)
 
@@ -103,12 +90,11 @@ class LogProcessor(DataProcessor):
                                for key, value in index.items()):
                         return False
             return True
-        else:
-            return False
+        return False
 
     def ingest(self, data: dict | list[dict]) -> None:
-        if self.validate(data) is False:
-            raise Exception("Improper numeric data")
+        if not self.validate(data):
+            raise Exception("Improper log data")
         else:
             if isinstance(data, list):
                 for i in data:  # level 1
@@ -119,11 +105,11 @@ class LogProcessor(DataProcessor):
                         if len == 0:
                             to_join += ": "
                         len += 1
-                    self.data_storage += [to_join]
+                    self.data_storage.append(to_join)
                     self.rank_tracker += 1
             else:
                 for key, value in data.items():
-                    self.data_storage += [str(key) + ": " + str(value)]
+                    self.data_storage .append(str(key) + ": " + str(value))
                     self.rank_tracker += 1
 
 
